@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Clock In</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary btn-block mt-3">Clock In</button>
+        </form>
+    </div>
+{% endblock %}

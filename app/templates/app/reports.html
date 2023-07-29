@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Work Hours Reports</title>
+</head>
+<body>
+    <h1>Work Hours Reports</h1>
+    <ul>
+        {% for employee in employees %}
+            <li>{{ employee.name }} - Total Hours: {{ employee.total_hours }}</li>
+            <ul>
+                {% for record in employee.workrecord_set.all %}
+                    <li>{{ record.date }} - Clock In: {{ record.clock_in }} - Clock Out: {{ record.clock_out }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+</body>
+</html>

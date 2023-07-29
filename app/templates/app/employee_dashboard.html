@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Welcome, {{ request.user.username }}!</h1>
+        <h2>Your Work Hours</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Total Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in work_records %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.clock_in }}</td>
+                        <td>{% if record.clock_out %}{{ record.clock_out }}{% else %}N/A{% endif %}</td>
+                        <td>{% if record.total_hours %}{{ record.total_hours }} hours{% else %}N/A{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

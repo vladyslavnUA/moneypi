@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+          "src": "moneypi/wsgi.py",
+          "use": "@vercel/python"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "moneypi/wsgi.py"
+        }
+      ]
+}

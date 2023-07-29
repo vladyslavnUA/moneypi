@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <form method="get" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="employee">Search by Employee:</label>
+                        <input type="text" name="employee" id="employee" class="form-control" value="{{ request.GET.employee }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="end_date">End Date:</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="clock_in_time">Clock-In Time:</label>
+                        <input type="time" name="clock_in_time" id="clock_in_time" class="form-control" value="{{ request.GET.clock_in_time }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="clock_out_time">Clock-Out Time:</label>
+                        <input type="time" name="clock_out_time" id="clock_out_time" class="form-control" value="{{ request.GET.clock_out_time }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="total_hours">Total Work Hours:</label>
+                        <input type="number" step="any" name="total_hours" id="total_hours" class="form-control" value="{{ request.GET.total_hours }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" name="has_clock_out" id="has_clock_out" class="form-check-input" {% if request.GET.has_clock_out %}checked{% endif %}>
+                            <label class="form-check-label" for="has_clock_out">Only Records with Clock Out</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% if request.user is admin %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th><a href="?sort_by=name">Employee</a></th>
+                    <th><a href="?sort_by=workrecord__date">Date</a></th>
+                    <th><a href="?sort_by=workrecord__clock_in">Clock-In Time</a></th>
+                    <th><a href="?sort_by=workrecord__clock_out">Clock-Out Time</a></th>
+                    <th><a href="?sort_by=workrecord__total_hours">Total Work Hours</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in page_obj %}
+                    <tr>
+                        <!-- Table rows as before -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% endif %}
+
+        <div class="container mt-4">
+            <h1 class="mb-4">Work Hours Tracking</h1>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                            {% for record in employee.workrecord_set.all %}
+                                <tr>
+                                    <td>{{ employee.name }}</td>
+                                    <td>{{ record.date }}</td>
+                                    <td>{{ record.clock_in|date:"h:i A" }}</td>
+                                    <td>{% if record.clock_out %}{{ record.clock_out|date:"h:i A" }}{% else %}N/A{% endif %}</td>
+                                    <td>{% if record.total_hours %}{{ record.total_hours }} hours{% else %}N/A{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>    
+    
+    <h3>Employees:</h3>
+    <ul>
+        {% for employee in employees %}
+        <li>{{ employee.name }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'clock_in' %}">Clock In</a>
+    <a href="{% url 'clock_out' %}">Clock Out</a>
+    <a href="{% url 'calendar' %}">Calendar</a>
+
+
+    {% for record in page_obj %}
+        <!-- Display the work record details here -->
+        <p>{{ record.employee }} - {{ record.clock_in }} - {{ record.clock_out }}</p>
+    {% endfor %}
+
+    <h3>Work Hours Summary:</h3>
+    <ul>
+        {% for employee in employees %}
+            <li>{{ employee.name }} - Total Hours: {{ employee.total_hours }} - Average Sentiment: {{ employee.average_sentiment }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+{% endblock %}

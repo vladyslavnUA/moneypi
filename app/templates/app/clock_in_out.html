@@ -1,0 +1,96 @@
+<!-- work_hours/templates/work_hours/clock_in_out.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Clock In/Out</h1>
+        <form method="post" id="clockInOutForm">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_clock_in_address">Clock-In Address:</label>
+                        <input type="text" name="clock_in_address" id="id_clock_in_address" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_clock_out_address">Clock-Out Address:</label>
+                        <input type="text" name="clock_out_address" id="id_clock_out_address" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Clock In/Out</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript to automatically fill in the clock-in and clock-out address fields with geolocation data
+        document.addEventListener('DOMContentLoaded', function () {
+            const clockInOutForm = document.getElementById('clockInOutForm');
+            const clockInAddressField = document.getElementById('id_clock_in_address');
+            const clockOutAddressField = document.getElementById('id_clock_out_address');
+
+            // Function to get the user's geolocation
+            function getGeolocation() {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+
+                            // Reverse geocoding to get the address from latitude and longitude
+                            const geocoder = new google.maps.Geocoder();
+                            const latLng = new google.maps.LatLng(latitude, longitude);
+                            geocoder.geocode({ 'latLng': latLng }, function (results, status) {
+                                if (status === google.maps.GeocoderStatus.OK) {
+                                    if (results[0]) {
+                                        const address = results[0].formatted_address;
+                                        clockInAddressField.value = address;
+                                        clockOutAddressField.value = address;
+                                    }
+                                }
+                            });
+                        },
+                        function (error) {
+                            console.error('Error getting geolocation:', error.message);
+                        }
+                    );
+                } else {
+                    console.error('Geolocation is not available.');
+                }
+            }
+
+            // Call the getGeolocation function when the page loads
+            getGeolocation();
+        });
+    </script>
+{% endblock %}
+
+
+    <!-- <div class="container mt-4">
+        <h1>Clock In/Out</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_clock_in_address">Clock-In Address:</label>
+                        <input type="text" name="clock_in_address" id="id_clock_in_address" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_clock_out_address">Clock-Out Address:</label>
+                        <input type="text" name="clock_out_address" id="id_clock_out_address" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Clock In/Out</button>
+        </form>
+    </div> -->
