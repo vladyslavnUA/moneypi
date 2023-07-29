@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'moneypi.wsgi.app'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'URL': 'postgresql://postgres:JZFVdyWDPAjXKO4CYM1f@containers-us-west-210.railway.app:6397/railway',
         'NAME': 'railway',
         'USER': 'postgres',
