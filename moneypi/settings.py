@@ -25,7 +25,7 @@ SECRET_KEY = '2$w8_yp(g)ll!1zm5t#_otgfbc=sdjttas(pnzmoi7=uk98mev'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'moneypi.vercel.app']
 
 
 # Application definition
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'moneypi.wsgi.application'
+WSGI_APPLICATION = 'moneypi.wsgi.app'
 
 
 # Database
