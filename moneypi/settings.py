@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'moneypi.wsgi.app'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'URL': 'postgresql://postgres:JZFVdyWDPAjXKO4CYM1f@containers-us-west-210.railway.app:6397/railway',
         'NAME': 'railway',
         'USER': 'postgres',
@@ -131,3 +131,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
