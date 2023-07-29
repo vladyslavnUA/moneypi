@@ -1,0 +1,1 @@
+web: gunicorn moneypi.wsgi --log-file-
